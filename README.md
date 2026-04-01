@@ -1,16 +1,17 @@
-## Hi there 👋
+Rakshit R
 
-<!--
-**rakshit-737/rakshit-737** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+B.Tech student at VIT Chennai with a strong interest in cybersecurity, software development, and problem solving. I focus on building practical solutions and continuously improving my technical skills.
 
-Here are some ideas to get you started:
+Skills
+Programming: C, C++, Python, Java
+Web: HTML, CSS, JavaScript
+Core Areas: Cybersecurity, Networking, Data Structures
+Interests
+Cybersecurity and ethical hacking
+System design and development
+Hackathons and real-world problem solving
+GitHub Stats
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+Contact
+Email:rakshitoffl@gmail.com
+LinkedIn: https://www.linkedin.com/in/rakshit-rameshbabu/
