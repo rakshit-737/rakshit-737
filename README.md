@@ -16,7 +16,10 @@ GitHub Stats
     <img src="https://skillicons.dev/icons?i=react,nodejs,express,mongodb,postgres,python,java,c,cpp,html,css,js,ts,git,github,docker,kubernetes,aws,linux,bash,nginx,firebase,redis,graphql,tailwind,nextjs&theme=light&perline=18" />
   </a>
 </p>
+
+
 ![Typing SVG](https://readme-typing-svg.herokuapp.com?color=00F7FF&lines=Cybersecurity+Enthusiast;Full+Stack+Developer;Problem+Solver)
+
 
 Contact
 
