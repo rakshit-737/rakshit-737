@@ -11,7 +11,13 @@ Cybersecurity and ethical hacking
 System design and development
 Hackathons and real-world problem solving
 GitHub Stats
+<p align="center">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=react,nodejs,express,mongodb,postgres,python,java,c,cpp,html,css,js,ts,git,github,docker,kubernetes,aws,linux,bash,nginx,firebase,redis,graphql,tailwind,nextjs&theme=light&perline=6" />
+  </a>
+</p>
+
 
 Contact
-Email:rakshitoffl@gmail.com
+
 LinkedIn: https://www.linkedin.com/in/rakshit-rameshbabu/
