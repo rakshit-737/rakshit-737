@@ -18,7 +18,7 @@ GitHub Stats
 </p>
 
 
-![Typing SVG](https://readme-typing-svg.herokuapp.com?color=00F7FF&lines=Cybersecurity+Enthusiast;Full+Stack+Developer;Problem+Solver)
+![Typing SVG](https://readme-typing-svg.herokuapp.com?color=00F7FF&lines=Cybersecurity+Enthusiast;Full+Stack+Developer)
 
 
 Contact
