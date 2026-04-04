@@ -1,26 +1,57 @@
-Rakshit R
+# Rakshit R
 
-B.Tech student at VIT Chennai with a strong interest in cybersecurity, software development, and problem solving. I focus on building practical solutions and continuously improving my technical skills.
+B.Tech student at VIT Chennai.  
+Interested in cybersecurity, software development, and solving real-world problems through practical systems.
 
-Skills
-Programming: C, C++, Python, Java
-Web: HTML, CSS, JavaScript
-Core Areas: Cybersecurity, Networking, Data Structures
-Interests
-Cybersecurity and ethical hacking
-System design and development
-Hackathons and real-world problem solving
-GitHub Stats
-<p align="center">
+---
+
+## About
+
+I like building things that actually work — not just projects for the sake of it.  
+Currently focused on strengthening my fundamentals in systems, networking, and backend development while exploring cybersecurity.
+
+---
+
+## Skills
+
+**Languages**  
+C • C++ • Python • Java  
+
+**Web**  
+HTML • CSS • JavaScript  
+
+**Core**  
+Cybersecurity • Networking • Data Structures  
+
+---
+
+## Tech Stack
+
+<p align="left">
   <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=react,nodejs,express,mongodb,postgres,python,java,c,cpp,html,css,js,ts,git,github,docker,kubernetes,aws,linux,bash,nginx,firebase,redis,graphql,tailwind,nextjs&theme=light&perline=18" />
+    <img src="https://skillicons.dev/icons?i=react,nodejs,express,mongodb,postgres,python,java,c,cpp,html,css,js,ts,git,github,docker,kubernetes,aws,linux,bash,nginx,firebase,redis,graphql,tailwind,nextjs&perline=12" />
   </a>
 </p>
 
+---
 
-![Typing SVG](https://readme-typing-svg.herokuapp.com?color=00F7FF&lines=Cybersecurity+Enthusiast;Full+Stack+Developer)
+## What I'm Working On
 
+- Exploring cybersecurity concepts and hands-on tools  
+- Improving problem solving and DSA  
+- Building full-stack and system-level projects  
 
-Contact
+---
+
+## GitHub Stats
+
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=rakshit-737&show_icons=true&theme=tokyonight&hide_border=true" />
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=rakshit-737&layout=compact&theme=tokyonight&hide_border=true" />
+</p>
+
+---
+
+## Contact
 
 LinkedIn: https://www.linkedin.com/in/rakshit-rameshbabu/
