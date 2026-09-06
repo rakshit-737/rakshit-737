@@ -1,4 +1,4 @@
-# Rakshit R
+# Rakshit 
 
 B.Tech student at VIT Chennai.  
 Interested in cybersecurity, software development, and solving real-world problems through practical systems.
