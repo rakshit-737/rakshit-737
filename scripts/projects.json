@@ -1,0 +1,92 @@
+[
+  {
+    "repo": "throughline",
+    "title": "THROUGHLINE",
+    "chips": [
+      "knowledge graph"
+    ],
+    "tagline": "Evidence-first security knowledge graph: 13 sibling engines write cited, confidence-graded claims into one graph, so an investigation becomes one query.",
+    "metric": "hit@1 0.400 vs 0.337 Sigma-only · 0% confidently wrong"
+  },
+  {
+    "repo": "warden-supply-chain-security",
+    "title": "WARDEN",
+    "chips": [
+      "v2.0.0"
+    ],
+    "tagline": "Supply-chain security platform: judges PyPI packages, manifests and container images by what the code does and who published it, without running it.",
+    "metric": "14 analyzers · SBOM + SARIF + CI gate · 2,908 backend tests"
+  },
+  {
+    "repo": "nikasha",
+    "title": "NIKASHA",
+    "chips": [
+      "v0.1.0 · PyPI"
+    ],
+    "tagline": "Proof, not prose. Fact-checks vulnerability reports against the source at the exact version they name, and reproduces the crash in a sandbox.",
+    "metric": "0/126 genuine curl reports falsely flagged · no LLM"
+  },
+  {
+    "repo": "afterlock",
+    "title": "AFTERLOCK",
+    "chips": [
+      "v0.1.0"
+    ],
+    "tagline": "Containment verifier for Kubernetes workload identities. A permission was revoked: prove the attacker's access is actually gone.",
+    "metric": "live kind lab agrees with the model: 17/17 steps, 3 runs"
+  },
+  {
+    "repo": "anvil",
+    "title": "ANVIL",
+    "chips": [
+      "detection-as-code"
+    ],
+    "tagline": "Lint, replay, measure and decay-monitor Sigma rules on real attack and benign Windows telemetry, and draft new ones from CTI.",
+    "metric": "461/461 SigmaHQ regressions · 2.99M benign events replayed"
+  },
+  {
+    "repo": "sluice",
+    "title": "SLUICE",
+    "chips": [
+      "pre-alpha"
+    ],
+    "tagline": "Information-flow control for LLM agents: every value carries a label, flows are tracked through tool calls, injected exfiltration is blocked at the sink.",
+    "metric": "CaMeL-style strict mode · OPA policy · provenance graph"
+  },
+  {
+    "repo": "proactive-feasibility-scheduler",
+    "title": "FEASIBILITY SCHEDULER",
+    "chips": [
+      "research"
+    ],
+    "tagline": "An evaluation study of ML job scheduling with a negative result: a learned wait-time score can only rank a queue by requested size.",
+    "metric": "45,432 dispatch instants · 0 counterexamples · p=2.6e-16"
+  },
+  {
+    "repo": "docforge",
+    "title": "DOCFORGE",
+    "chips": [
+      "live"
+    ],
+    "tagline": "Local-first document studio: write Markdown, export typeset PDFs and native Word files with TOC, footnotes, citations and equations.",
+    "metric": "Next.js PWA + single-file offline edition · no account"
+  },
+  {
+    "repo": "fillwright",
+    "title": "FILLWRIGHT",
+    "chips": [
+      "v0.6.1"
+    ],
+    "tagline": "Privacy-first Chrome extension (MV3): import a resume once and fill job applications from a profile that never leaves your device.",
+    "metric": "no backend · no telemetry · never auto-submits"
+  },
+  {
+    "repo": "feelslike",
+    "title": "FEELSLIKE",
+    "chips": [
+      "hackathon finals"
+    ],
+    "tagline": "A building that listens: plain-language comfort complaints become energy-optimal HVAC actions through a physics digital twin.",
+    "metric": "-26.6% HVAC energy · 0 comfort-violation min (7-day sim)"
+  }
+]

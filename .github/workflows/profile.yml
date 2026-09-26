@@ -1,0 +1,65 @@
+name: profile-cards
+
+# Rebuilds every live image on the profile from the GitHub API and commits the
+# SVGs, so viewing the profile never depends on a third-party image service.
+on:
+  schedule:
+    - cron: "17 20 * * *" # 01:47 IST, daily
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/**"
+      - ".github/workflows/profile.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-cards
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install font subsetter
+        run: pip install --quiet fonttools brotli
+
+      - name: Telemetry, language and project cards
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/build_cards.py --user "${{ github.repository_owner }}"
+
+      - name: Contribution snake
+        uses: Platane/snk/svg-only@v3
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            generated/snake-dark.svg?palette=github-dark&color_snake=#00e38c&color_dots=#161b22,#0b4d33,#0a7a4e,#00b36e,#00e38c
+            generated/snake-light.svg?palette=github-light&color_snake=#0a7a4e
+
+      - name: 3D contribution calendar
+        uses: yoshi389111/github-profile-3d-contrib@v0.9.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+
+      - name: Commit if anything changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add generated profile-3d-contrib
+          if git diff --cached --quiet; then
+            echo "no changes"
+          else
+            git commit -m "chore(profile): refresh generated cards"
+            git push
+          fi
