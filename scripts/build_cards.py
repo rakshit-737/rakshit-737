@@ -25,7 +25,8 @@ import urllib.request
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from svgkit import C, CHAR_W, appear, cursor, esc, reveal, svg_doc, typed, window, wrap  # noqa: E402
+from svgkit import C, CHAR_W, appear, beam, counter, cursor, esc, reveal, svg_doc, typed, window, wrap  # noqa: E402
+import motifs  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 API = os.environ.get("GITHUB_GRAPHQL_URL", "https://api.github.com/graphql")
@@ -179,9 +180,9 @@ def stats_card(d: dict) -> str:
     for i, (k1, v1, k2, v2) in enumerate(rows):
         g = (
             f'<text x="24" y="{y}" font-size="13" fill="{C["dim"]}">{esc(k1)}</text>'
-            f'<text x="226" y="{y}" font-size="14" font-weight="700" text-anchor="end" fill="{C["text"]}">{esc(v1)}</text>'
-            f'<text x="262" y="{y}" font-size="13" fill="{C["dim"]}">{esc(k2)}</text>'
-            f'<text x="476" y="{y}" font-size="14" font-weight="700" text-anchor="end" fill="{C["green"]}">{esc(v2)}</text>'
+            + counter(226, y, v1, t + 0.15 + i * 0.12, f'font-size="14" font-weight="700" text-anchor="end" fill="{C["text"]}"')
+            + f'<text x="262" y="{y}" font-size="13" fill="{C["dim"]}">{esc(k2)}</text>'
+            + counter(476, y, v2, t + 0.15 + i * 0.12, f'font-size="14" font-weight="700" text-anchor="end" fill="{C["green"]}"')
         )
         parts.append(appear(g, t + 0.15 + i * 0.12))
         y += 26
@@ -229,6 +230,14 @@ def stats_card(d: dict) -> str:
                 continue
             rects.append(f'<rect x="{x0 + wi*step:.1f}" y="{y0 + di*step:.1f}" width="{cell}" height="{cell}" rx="1.4" fill="{fill}"/>')
         parts.append(appear("".join(rects), t + 0.1 + wi * 0.018, 0.15))
+    if weeks and weeks[-1]:
+        di = max(k for k, c in enumerate(weeks[-1]) if c is not None)
+        lx, ly = x0 + (ncols - 1) * step + cell / 2, y0 + di * step + cell / 2
+        parts.append(appear(
+            f'<circle cx="{lx:.1f}" cy="{ly:.1f}" r="4" fill="none" stroke="{C["green"]}">'
+            f'<animate attributeName="r" values="4;11" dur="1.8s" repeatCount="indefinite"/>'
+            f'<animate attributeName="stroke-opacity" values="0.9;0" dur="1.8s" repeatCount="indefinite"/></circle>',
+            t + 0.1 + ncols * 0.018))
     if not weeks:
         parts.append(appear(
             f'<text x="{W/2}" y="{y0 + 3.5*step + 4}" font-size="11.5" text-anchor="middle" fill="{C["dim"]}">'
@@ -290,7 +299,7 @@ def languages_card(d: dict, top: int = 7) -> str:
             f'<text x="44" y="{y}" font-size="{fsr}" fill="{C["soft"]}">{esc(name[:14])}</text>'
             f'<text x="{44 + 15*fsr*CHAR_W:.1f}" y="{y}" font-size="{fsr}" fill="{color}">{filled}'
             f'<tspan fill="{C["faint"]}">{empty}</tspan></text>'
-            f'<text x="476" y="{y}" font-size="{fsr}" font-weight="700" text-anchor="end" fill="{C["text"]}">{pct:5.1f}%</text>'
+            + counter(476, y, f"{pct:.1f}%", t + i * 0.1, f'font-size="{fsr}" font-weight="700" text-anchor="end" fill="{C["text"]}"', dur=0.9)
         )
         parts.append(appear(row, t + i * 0.1))
         y += 20
@@ -311,30 +320,42 @@ def chip(x: float, y: float, label: str, color: str) -> tuple[str, float]:
     )
 
 
-def project_card(p: dict, live: dict | None) -> str:
-    W, H = 500, 214
+def project_card(p: dict, live: dict | None, idx: int = 0) -> str:
+    W, H = 500, 236
+    MS = motifs.S  # the project's own little animation sits right of the tagline
     repo = p["repo"]
-    parts = [window(W, H, f"~/rakshit-737/{repo}", "p")]
+    accent = C.get(p.get("accent", "green"), C["green"])
+    parts = [window(W, H, f"~/rakshit-737/{repo}", "p", accent=accent)]
     ts = 22
     title = p["title"]
+    # status LED in the title bar, breathing in the card's accent
+    parts.append(
+        f'<circle cx="{W-22}" cy="17" r="3.5" fill="{accent}">'
+        f'<animate attributeName="opacity" values="1;0.35;1" dur="2.4s" begin="{-idx*0.37:.2f}s" repeatCount="indefinite"/></circle>')
     parts.append(appear(
-        f'<text x="24" y="74" font-size="{ts}" font-weight="800" fill="{C["green"]}">{esc(title)}</text>', 0.15))
+        f'<text x="24" y="74" font-size="{ts}" font-weight="800" fill="{accent}">{esc(title)}</text>', 0.15))
     # chips, right-aligned
     x = W - 24
     chip_svg = []
     for label in reversed(p.get("chips", [])):
         est = len(label) * 11 * CHAR_W + 14
         x -= est
-        svg, _ = chip(x, 70, label, C["cyan"])
+        svg, _ = chip(x, 70, label, accent)
         chip_svg.append(svg)
         x -= 6
     parts.append(appear("".join(chip_svg), 0.3))
-    width_chars = int((W - 48) / (13 * CHAR_W * 1.04))  # 4% slack for hinting
-    lines = wrap(p["tagline"], width_chars)[:3]
+    has_motif = p.get("motif") in motifs.MOTIFS
+    text_w = W - 48 - (MS + 14 if has_motif else 0)
+    width_chars = int(text_w / (13 * CHAR_W * 1.04))  # 4% slack for hinting
+    lines = wrap(p["tagline"], width_chars)[:4]
     y = 104
     for i, line in enumerate(lines):
         parts.append(appear(f'<text x="24" y="{y}" font-size="13" fill="{C["soft"]}">{esc(line)}</text>', 0.35 + i * 0.08))
         y += 19
+    if has_motif:
+        mx, my = W - 24 - MS, 94
+        parts.append(appear(
+            f'<g transform="translate({mx},{my})">{motifs.draw(p["motif"], accent)}</g>', 0.5, 0.4))
     metric = "▸ " + p["metric"]
     msize = min(12.5, (W - 48) / (len(metric) * CHAR_W * 1.04))
     parts.append(appear(
@@ -354,7 +375,9 @@ def project_card(p: dict, live: dict | None) -> str:
         if live.get("pushed"):
             foot.append(f'<text x="{W-24}" y="{H-16}" font-size="12" text-anchor="end" fill="{C["dim"]}">pushed {live["pushed"][:10]}</text>')
     parts.append(appear("".join(foot), 0.7))
-    used = title + "".join(p.get("chips", [])) + p["tagline"] + metric + (lang or "") + "★ pushed 0123456789-~/rakshit-737/" + repo
+    # a comet of the accent colour orbits the frame; cards side by side are out of phase
+    parts.append(appear(beam(W, H, accent, "pb", r=12, dur=9.0, phase=(idx * 0.31) % 1), 0.8, 0.6))
+    used = title + motifs.glyphs(p.get("motif")) + "".join(p.get("chips", [])) + p["tagline"] + metric + (lang or "") + "★ pushed 0123456789-~/rakshit-737/" + repo
     return svg_doc(W, H, "\n".join(parts), "", f"{title}: {p['tagline']}", used)
 
 
@@ -383,9 +406,9 @@ def main() -> None:
     (out / "languages.svg").write_text(languages_card(data), encoding="utf-8")
     by_name = {r["name"].lower(): r for r in data["repos"]}
     projects = json.loads((ROOT / "scripts" / "projects.json").read_text())
-    for p in projects:
+    for i, p in enumerate(projects):
         live = by_name.get(p["repo"].lower())
-        (out / f"card-{p['repo']}.svg").write_text(project_card(p, live), encoding="utf-8")
+        (out / f"card-{p['repo']}.svg").write_text(project_card(p, live, i), encoding="utf-8")
     print(f"wrote {2 + len(projects)} cards to {out}")
 
 

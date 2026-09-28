@@ -8,6 +8,8 @@ external fonts).
 from __future__ import annotations
 
 import base64
+import random
+import re
 import html
 import io
 from pathlib import Path
@@ -46,9 +48,13 @@ C = {
     "yellow": "#ffbd2e",
     "ok": "#27c93f",
     "purple": "#a78bfa",
+    "coral": "#ff7b72",
 }
 
 ASCII = "".join(chr(c) for c in range(32, 127))
+
+# Noise glyphs for scramble(): all plain ASCII, so the font subset stays small.
+NOISE = "01<>/\\|=+*#%$&@?ABCDEFXYZ0123456789"
 
 
 def esc(s: str) -> str:
@@ -85,7 +91,7 @@ def _subset_woff2(path: Path, text: str) -> bytes | None:
     opts.layout_features = ["kern"]
     opts.name_IDs = []
     opts.notdef_outline = True
-    font = TTFont(str(path))
+    font = TTFont(str(path), recalcTimestamp=False)
     sub = subset.Subsetter(options=opts)
     sub.populate(text=text + " ")
     sub.subset(font)
@@ -131,8 +137,10 @@ def svg_doc(w: int, h: int, body: str, css: str, title: str, used_text: str) -> 
     )
 
 
-def window(w: int, h: int, title: str, uid: str, r: int = 12) -> str:
-    """Terminal window chrome: rounded frame, title bar, traffic lights."""
+def window(w: int, h: int, title: str, uid: str, r: int = 12, accent: str | None = None) -> str:
+    """Terminal window chrome: rounded frame, title bar, traffic lights.
+    `accent` tints the corner glow (defaults to the brand green)."""
+    glow = accent or C["green"]
     return f"""
 <defs>
   <clipPath id="{uid}-frame"><rect x="0.5" y="0.5" width="{w-1}" height="{h-1}" rx="{r}"/></clipPath>
@@ -140,8 +148,8 @@ def window(w: int, h: int, title: str, uid: str, r: int = 12) -> str:
     <rect width="4" height="1" fill="#ffffff" opacity="0.025"/>
   </pattern>
   <radialGradient id="{uid}-glow" cx="15%" cy="0%" r="90%">
-    <stop offset="0" stop-color="{C['green']}" stop-opacity="0.10"/>
-    <stop offset="1" stop-color="{C['green']}" stop-opacity="0"/>
+    <stop offset="0" stop-color="{glow}" stop-opacity="0.10"/>
+    <stop offset="1" stop-color="{glow}" stop-opacity="0"/>
   </radialGradient>
 </defs>
 <g clip-path="url(#{uid}-frame)">
@@ -209,4 +217,98 @@ def cursor(x: float, y: float, size: float, begin: float = 0.0, color: str | Non
         f"{hide}"
         f'<animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.5;0.5;1" '
         f'dur="1.05s" begin="{begin:.3f}s" repeatCount="indefinite"/></rect>'
+    )
+
+
+# --------------------------------------------------------------------------- motion helpers
+# Every helper below keeps the finished picture as the resting state: SMIL only
+# hides things until their moment. A renderer without SMIL shows the end frame.
+
+def scramble(x: float, y: float, text: str, size: float, begin: float, fill: str,
+             weight: int = 400, frames: int = 8, fps: float = 24, stagger: float = 0.045,
+             seed: int = 7, extra: str = "", noise_fill: str | None = None) -> tuple[str, float]:
+    """Text that decrypts in: each character flickers through noise glyphs,
+    then locks to its real letter, left to right. Returns (svg, end_time)."""
+    rnd = random.Random(seed)
+    cw = size * CHAR_W
+    step = 1 / fps
+    out, end = [], begin
+    common = f'y="{y}" font-size="{size}" font-weight="{weight}" fill="{fill}" {extra}'
+    noisy = f'y="{y}" font-size="{size}" font-weight="{weight}" fill="{noise_fill or fill}" {extra}'
+    for i, ch in enumerate(text):
+        if ch == " ":
+            continue
+        cx = x + i * cw
+        t0 = begin + i * stagger
+        lock = t0 + frames * step
+        end = max(end, lock)
+        for k in range(frames):
+            g = rnd.choice(NOISE)
+            out.append(
+                f'<text x="{cx:.2f}" {noisy} visibility="hidden" opacity="0.9">{esc(g)}'
+                f'<set attributeName="visibility" to="visible" begin="{t0 + k*step:.3f}s" dur="{step:.3f}s"/></text>')
+        out.append(f'<text x="{cx:.2f}" {common}>{esc(ch)}{reveal(lock, 0.01)}</text>')
+    return "".join(out), end
+
+
+_NUM = re.compile(r"^(?P<pre>[^\d]*)(?P<num>\d[\d,]*(?:\.\d+)?)(?P<suf>.*)$")
+
+
+def counter(x: float, y: float, final: str, begin: float, attrs: str,
+            dur: float = 1.1, frames: int = 16) -> str:
+    """A number that counts up from 0 to `final` (keeps its commas, decimals,
+    prefix and suffix, e.g. '3,557', '67.0%', '10d'). Non-numbers render plain."""
+    m = _NUM.match(final)
+    if not m:
+        return f'<text x="{x}" y="{y}" {attrs}>{esc(final)}</text>'
+    pre, num, suf = m["pre"], m["num"], m["suf"]
+    dec = len(num.split(".")[1]) if "." in num else 0
+    commas = "," in num
+    val = float(num.replace(",", ""))
+    step = dur / frames
+    out = []
+    for k in range(frames):
+        p = 1 - (1 - k / frames) ** 3  # ease-out cubic
+        v = val * p
+        s = f"{v:,.{dec}f}" if commas else f"{v:.{dec}f}"
+        out.append(
+            f'<text x="{x}" y="{y}" {attrs} visibility="hidden">{esc(pre + s + suf)}'
+            f'<set attributeName="visibility" to="visible" begin="{begin + k*step:.3f}s" dur="{step:.3f}s"/></text>')
+    out.append(f'<text x="{x}" y="{y}" {attrs}>{esc(final)}{reveal(begin + dur, 0.01)}</text>')
+    return "".join(out)
+
+
+def beam(w: float, h: float, color: str, uid: str, r: float = 12, dur: float = 8.0,
+         phase: float = 0.0, length: float = 16) -> str:
+    """A comet of light that orbits a rounded frame (three stacked dashes make
+    the tail). `phase` (0-1) desynchronises cards that sit side by side."""
+    layers = [(length, 0.4, 7, True), (length * 0.55, 0.75, 3.5, True), (length * 0.3, 1.0, 2.0, False)]
+    out = [f'<defs><filter id="{uid}-bl" x="-5%" y="-5%" width="110%" height="110%">'
+           f'<feGaussianBlur stdDeviation="2.6"/></filter></defs><g fill="none" stroke="{color}" stroke-linecap="round">']
+    for L, op, sw, blur in layers:
+        o0 = -(length - L)
+        flt = f' filter="url(#{uid}-bl)"' if blur else ""
+        out.append(
+            f'<rect x="1.2" y="1.2" width="{w-2.4}" height="{h-2.4}" rx="{r-0.7}" pathLength="100" '
+            f'stroke-width="{sw}" stroke-opacity="{op}" stroke-dasharray="{L:.2f} {100-L:.2f}" '
+            f'stroke-dashoffset="{o0:.2f}"{flt}>'
+            f'<animate attributeName="stroke-dashoffset" values="{o0:.2f};{o0-100:.2f}" dur="{dur}s" '
+            f'begin="{-phase*dur:.2f}s" repeatCount="indefinite"/></rect>')
+    out.append("</g>")
+    return "".join(out)
+
+
+def sheen(w: float, h: float, uid: str, r: float, begin: float, every: float = 6.0) -> str:
+    """A soft diagonal highlight that glides across a clipped shape now and then."""
+    band = max(40.0, h * 1.4)
+    travel = w + band * 2
+    return (
+        f'<defs><clipPath id="{uid}-c"><rect x="0.5" y="0.5" width="{w-1}" height="{h-1}" rx="{r}"/></clipPath>'
+        f'<linearGradient id="{uid}-g" x1="0" x2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0"/>'
+        f'<stop offset="0.5" stop-color="#ffffff" stop-opacity="0.13"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>'
+        f'</linearGradient></defs>'
+        f'<g clip-path="url(#{uid}-c)"><rect x="{-band*2:.1f}" y="{-h}" width="{band:.1f}" height="{h*3}" '
+        f'fill="url(#{uid}-g)" transform="rotate(20 {w/2:.1f} {h/2:.1f})">'
+        f'<animate attributeName="x" values="{-band*2:.1f};{travel:.1f};{travel:.1f}" keyTimes="0;{min(0.9, 1.1/every):.3f};1" '
+        f'dur="{every}s" begin="{begin:.2f}s" repeatCount="indefinite"/></rect></g>'
     )

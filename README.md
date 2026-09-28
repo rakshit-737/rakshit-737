@@ -2,18 +2,14 @@
   <img src="assets/hero.svg" width="100%" alt="Terminal: whoami → Rakshit Rameshbabu, Software & Security Engineer, B.Tech CSE (Cyber Security) at VIT Chennai. A radar sweeps across his public security repos." />
 </a>
 
-<p align="center">
-  <a href="https://github.com/rakshit-737">
-    <img src="https://readme-typing-svg.demolab.com?center=true&vCenter=true&font=JetBrains+Mono&weight=600&size=18&duration=2600&pause=900&color=00E38C&width=760&height=36&lines=detection-as-code%2C%20measured%20on%20real%20telemetry;provenance%20graphs%20%E2%86%92%20root%20cause%20%E2%86%92%20blast%20radius;static%20analysis%20that%20never%20runs%20the%20sample;attribution%20that%20can%20say%3A%20I%20don%27t%20know;every%20number%20regenerates%20from%20one%20command" alt="detection-as-code, measured on real telemetry · provenance graphs to root cause and blast radius · static analysis that never runs the sample · attribution that can say I don't know · every number regenerates from one command" />
-  </a>
-</p>
+<img src="assets/taglines.svg" width="100%" alt="detection-as-code, measured on real telemetry · provenance graphs to root cause and blast radius · static analysis that never runs the sample · attribution that can say I don't know · every number regenerates from one command" />
 
 <p align="center">
-  <a href="https://rakshit-737.is-a.dev"><img src="https://img.shields.io/badge/PORTFOLIO-rakshit--737.is--a.dev-0a0e14?style=for-the-badge&labelColor=161b22&logo=gnometerminal&logoColor=00e38c" alt="Portfolio" /></a>
-  <a href="https://www.linkedin.com/in/rakshit-rameshbabu/"><img src="https://img.shields.io/badge/LINKEDIN-rakshit--rameshbabu-0a0e14?style=for-the-badge&labelColor=161b22&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI%2BPHBhdGggZmlsbD0iIzAwZTM4YyIgZD0iTTIwLjQ0NyAyMC40NTJoLTMuNTU0di01LjU2OWMwLTEuMzI4LS4wMjctMy4wMzctMS44NTItMy4wMzctMS44NTMgMC0yLjEzNiAxLjQ0NS0yLjEzNiAyLjkzOXY1LjY2N0g5LjM1MVY5aDMuNDE0djEuNTYxaC4wNDZjLjQ3Ny0uOSAxLjYzNy0xLjg1IDMuMzctMS44NSAzLjYwMSAwIDQuMjY3IDIuMzcgNC4yNjcgNS40NTV2Ni4yODZ6TTUuMzM3IDcuNDMzYy0xLjE0NCAwLTIuMDYzLS45MjYtMi4wNjMtMi4wNjUgMC0xLjEzOC45Mi0yLjA2MyAyLjA2My0yLjA2MyAxLjE0IDAgMi4wNjQuOTI1IDIuMDY0IDIuMDYzIDAgMS4xMzktLjkyNSAyLjA2NS0yLjA2NCAyLjA2NXptMS43ODIgMTMuMDE5SDMuNTU1VjloMy41NjR2MTEuNDUyek0yMi4yMjUgMEgxLjc3MUMuNzkyIDAgMCAuNzc0IDAgMS43Mjl2MjAuNTQyQzAgMjMuMjI3Ljc5MiAyNCAxLjc3MSAyNGgyMC40NTFDMjMuMiAyNCAyNCAyMy4yMjcgMjQgMjIuMjcxVjEuNzI5QzI0IC43NzQgMjMuMiAwIDIyLjIyMiAwaC4wMDN6Ii8%2BPC9zdmc%2B" alt="LinkedIn" /></a>
-  <a href="mailto:rakshitoffl@gmail.com"><img src="https://img.shields.io/badge/EMAIL-rakshitoffl%40gmail.com-0a0e14?style=for-the-badge&labelColor=161b22&logo=gmail&logoColor=00e38c" alt="Email" /></a>
-  <a href="https://rakshit-737.is-a.dev/rakshit-rameshbabu-resume.pdf"><img src="https://img.shields.io/badge/RESUME-pdf-0a0e14?style=for-the-badge&labelColor=161b22&logo=readdotcv&logoColor=00e38c" alt="Resume (PDF)" /></a>
-  <a href="https://learn.cylabacademy.org/users/rrakshit"><img src="https://img.shields.io/badge/CYLAB-academy-0a0e14?style=for-the-badge&labelColor=161b22" alt="CyLab Academy" /></a>
+  <a href="https://rakshit-737.is-a.dev"><img src="assets/buttons/portfolio.svg" height="34" alt="Portfolio: rakshit-737.is-a.dev" /></a>
+  <a href="https://www.linkedin.com/in/rakshit-rameshbabu/"><img src="assets/buttons/linkedin.svg" height="34" alt="LinkedIn: rakshit-rameshbabu" /></a>
+  <a href="mailto:rakshitoffl@gmail.com"><img src="assets/buttons/email.svg" height="34" alt="Email: rakshitoffl@gmail.com" /></a>
+  <a href="https://rakshit-737.is-a.dev/rakshit-rameshbabu-resume.pdf"><img src="assets/buttons/resume.svg" height="34" alt="Resume (PDF)" /></a>
+  <a href="https://learn.cylabacademy.org/users/rrakshit"><img src="assets/buttons/cylab.svg" height="34" alt="CyLab Academy" /></a>
 </p>
 
 ## <samp>❯ cat about.md</samp>
@@ -103,15 +99,7 @@ Thirteen single-purpose security engines, each benchmarked on its own, plugged i
 
 ## <samp>❯ tail trophies.log</samp>
 
-```diff
-+ [2025-06-21]  FIRST PRIZE   Cyber Secure 360 Expo 2025 · SCOPE, VIT Chennai
-+ [2026-06]     TOP 100       FarAway Zuup Hackathon · of ~11,000 participants
-+ [2026-08]     FINALS        FeelsLike (Team Goldilocks) · digital-twin building optimizer
-+ [2026-09-17]  RELEASE       Warden v2.0.0 · supply-chain security platform
-+ [2026-09-20]  RELEASE       Fillwright v0.6.1 · privacy-first autofill extension
-+ [2026-09-26]  RELEASE       Nikasha v0.1.0 · PyPI, GHCR, GitHub Releases
-! [ongoing]     CGPA 9.07     B.Tech CSE (Cyber Security), VIT Chennai · class of 2028
-```
+<img src="assets/trophies.svg" width="100%" alt="trophies.log: 2025-06-21 FIRST PRIZE, Cyber Secure 360 Expo 2025, SCOPE, VIT Chennai · 2026-06 TOP 100, FarAway Zuup Hackathon, of ~11,000 participants · 2026-08 FINALS, FeelsLike (Team Goldilocks), digital-twin building optimizer · 2026-09-17 RELEASE, Warden v2.0.0, supply-chain security platform · 2026-09-20 RELEASE, Fillwright v0.6.1, privacy-first autofill extension · 2026-09-26 RELEASE, Nikasha v0.1.0 on PyPI, GHCR and GitHub Releases · ongoing: CGPA 9.07, B.Tech CSE (Cyber Security), VIT Chennai, class of 2028" />
 
 ## <samp>❯ gh telemetry</samp>
 
@@ -139,18 +127,19 @@ Thirteen single-purpose security engines, each benchmarked on its own, plugged i
 ```mermaid
 flowchart LR
   API[("GitHub GraphQL API")] --> CARDS["build_cards.py<br/>telemetry · languages · project cards"]
+  ART["build_art.py<br/>hero · taglines · buttons · map · trophies"] --> GIT
   API --> SNK["Platane/snk<br/>contribution snake"]
   API --> D3["github-profile-3d-contrib<br/>3D calendar"]
-  CARDS & SNK & D3 --> GIT["profile.yml<br/>daily at 01:47 IST"]
-  GIT -->|git commit| SVG["generated/*.svg"]
+  CARDS & SNK & D3 --> GIT["profile.yml<br/>daily at 01:47 IST · on script changes"]
+  GIT -->|git commit| SVG["assets/ + generated/*.svg"]
   SVG --> README(["this README"])
   classDef n fill:#0a0e14,stroke:#00e38c,color:#e6edf3
   classDef hub fill:#00e38c,stroke:#00e38c,color:#0a0e14
-  class API,CARDS,SNK,D3,GIT,SVG n
+  class API,CARDS,ART,SNK,D3,GIT,SVG n
   class README hub
 ```
 
-The hero, toolchain, map and footer are hand-built animated SVGs (`scripts/build_art.py`): SMIL only, no JavaScript, with a subset of JetBrains Mono embedded so they render the same on every OS. The public instances of github-readme-stats, trophies and activity-graph now return 503/402, so the telemetry and language cards are generated here instead and nothing is fetched from a third-party stats server when this page loads.
+The hero, tagline banner, link buttons, toolchain, map, trophies log and footer are hand-built animated SVGs (`scripts/build_art.py`): SMIL only, no JavaScript, with a subset of JetBrains Mono embedded so they render the same on every OS, and every animation rests on its finished frame. The public instances of github-readme-stats, trophies and activity-graph now return 503/402, so the telemetry and language cards are generated here instead. Apart from the skill icons, every image on this page is served from this repo.
 
 </details>
 

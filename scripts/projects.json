@@ -2,6 +2,8 @@
   {
     "repo": "throughline",
     "title": "THROUGHLINE",
+    "accent": "green",
+    "motif": "graph",
     "chips": [
       "knowledge graph"
     ],
@@ -11,6 +13,8 @@
   {
     "repo": "warden-supply-chain-security",
     "title": "WARDEN",
+    "accent": "coral",
+    "motif": "shield",
     "chips": [
       "v2.0.0"
     ],
@@ -20,6 +24,8 @@
   {
     "repo": "nikasha",
     "title": "NIKASHA",
+    "accent": "magenta",
+    "motif": "magnifier",
     "chips": [
       "v0.1.0 · PyPI"
     ],
@@ -29,6 +35,8 @@
   {
     "repo": "afterlock",
     "title": "AFTERLOCK",
+    "accent": "cyan",
+    "motif": "padlock",
     "chips": [
       "v0.1.0"
     ],
@@ -38,6 +46,8 @@
   {
     "repo": "anvil",
     "title": "ANVIL",
+    "accent": "green",
+    "motif": "telemetry",
     "chips": [
       "detection-as-code"
     ],
@@ -47,6 +57,8 @@
   {
     "repo": "sluice",
     "title": "SLUICE",
+    "accent": "purple",
+    "motif": "gate",
     "chips": [
       "pre-alpha"
     ],
@@ -56,6 +68,8 @@
   {
     "repo": "proactive-feasibility-scheduler",
     "title": "FEASIBILITY SCHEDULER",
+    "accent": "cyan",
+    "motif": "sort",
     "chips": [
       "research"
     ],
@@ -65,6 +79,8 @@
   {
     "repo": "docforge",
     "title": "DOCFORGE",
+    "accent": "magenta",
+    "motif": "page",
     "chips": [
       "live"
     ],
@@ -74,6 +90,8 @@
   {
     "repo": "fillwright",
     "title": "FILLWRIGHT",
+    "accent": "purple",
+    "motif": "form",
     "chips": [
       "v0.6.1"
     ],
@@ -83,6 +101,8 @@
   {
     "repo": "feelslike",
     "title": "FEELSLIKE",
+    "accent": "coral",
+    "motif": "building",
     "chips": [
       "hackathon finals"
     ],

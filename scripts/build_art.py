@@ -1,15 +1,21 @@
-"""Static animated art for the profile README: hero terminal + footer.
+"""Hand-built animated art for the profile README.
 
-Run:  python scripts/build_art.py      (writes assets/hero.svg, assets/footer.svg)
-These only change when you edit the copy below, so they are committed once and
-are not rebuilt by the daily workflow.
+Run:  python scripts/build_art.py
+Writes assets/: hero, taglines (self-hosted typing banner), buttons/*, toolchain,
+constellation (THROUGHLINE map), trophies and footer.
+
+Output is deterministic (fixed seeds, font timestamps pinned), so the workflow
+can rebuild it on every run and only commits when the copy below changes.
+Everything is SMIL: no JavaScript, no external requests, and the resting frame
+of every animation is the finished picture.
 """
 from __future__ import annotations
 
 import math
+import random
 from pathlib import Path
 
-from svgkit import C, CHAR_W, appear, cursor, esc, reveal, svg_doc, typed, window
+from svgkit import C, CHAR_W, NOISE, appear, beam, counter, cursor, esc, reveal, scramble, sheen, svg_doc, typed, window
 
 OUT = Path(__file__).resolve().parent.parent / "assets"
 
@@ -62,22 +68,33 @@ def hero() -> str:
     parts.append(s)
     t += 0.25
 
-    # glitchy name
+    # name: decrypts letter by letter, then a chromatic glitch every few seconds
     ns, ny = 44, 128
+    name_svg, name_end = scramble(x0, ny, NAME, ns, t, C["text"], weight=800, frames=9, fps=26,
+                                  stagger=0.05, seed=737, noise_fill=C["green"])
+    gb = f"{name_end + 1.2:.2f}s"
     glitch_kt = "0;0.90;0.905;0.92;0.935;0.95;1"
     name_layers = f"""
 <g>
   <text x="{x0}" y="{ny}" font-size="{ns}" font-weight="800" fill="{C['cyan']}" opacity="0">{esc(NAME)}
-    <animate attributeName="opacity" values="0;0;0.85;0;0.85;0;0" keyTimes="{glitch_kt}" calcMode="discrete" dur="5s" begin="2.5s" repeatCount="indefinite"/>
-    <animateTransform attributeName="transform" type="translate" values="0 0;0 0;-4 0;3 -1;-3 1;0 0;0 0" keyTimes="{glitch_kt}" calcMode="discrete" dur="5s" begin="2.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0;0.85;0;0.85;0;0" keyTimes="{glitch_kt}" calcMode="discrete" dur="5s" begin="{gb}" repeatCount="indefinite"/>
+    <animateTransform attributeName="transform" type="translate" values="0 0;0 0;-4 0;3 -1;-3 1;0 0;0 0" keyTimes="{glitch_kt}" calcMode="discrete" dur="5s" begin="{gb}" repeatCount="indefinite"/>
   </text>
   <text x="{x0}" y="{ny}" font-size="{ns}" font-weight="800" fill="{C['magenta']}" opacity="0">{esc(NAME)}
-    <animate attributeName="opacity" values="0;0;0.8;0;0.8;0;0" keyTimes="{glitch_kt}" calcMode="discrete" dur="5s" begin="2.5s" repeatCount="indefinite"/>
-    <animateTransform attributeName="transform" type="translate" values="0 0;0 0;4 1;-3 0;3 -1;0 0;0 0" keyTimes="{glitch_kt}" calcMode="discrete" dur="5s" begin="2.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0;0.8;0;0.8;0;0" keyTimes="{glitch_kt}" calcMode="discrete" dur="5s" begin="{gb}" repeatCount="indefinite"/>
+    <animateTransform attributeName="transform" type="translate" values="0 0;0 0;4 1;-3 0;3 -1;0 0;0 0" keyTimes="{glitch_kt}" calcMode="discrete" dur="5s" begin="{gb}" repeatCount="indefinite"/>
   </text>
-  <text x="{x0}" y="{ny}" font-size="{ns}" font-weight="800" fill="{C['text']}">{esc(NAME)}</text>
+  {name_svg}
 </g>"""
-    parts.append(appear(name_layers, t, 0.35))
+    parts.append(name_layers)
+    # a scan line that wipes across the name as it locks
+    parts.append(
+        f'<rect x="{x0 - 6}" y="{ny - ns * 0.86:.1f}" width="3" height="{ns * 1.05:.1f}" fill="{C["green"]}" opacity="0">'
+        f'<animate attributeName="x" values="{x0 - 6};{x0 - 6};{x0 + len(NAME) * ns * CHAR_W + 6:.1f}" '
+        f'keyTimes="0;{t / name_end:.4f};1" dur="{name_end:.3f}s" fill="freeze"/>'
+        f'<animate attributeName="opacity" values="0;0;0.9;0" keyTimes="0;{t / name_end:.4f};0.97;1" dur="{name_end:.3f}s" fill="freeze"/>'
+        f'</rect>')
+    t = name_end - 0.25
     parts.append(appear(
         f'<text x="{x0}" y="162" font-size="17" font-weight="700" fill="{C["green"]}">{esc(ROLE)}</text>'
         f'<text x="{x0}" y="187" font-size="14" fill="{C["dim"]}">{esc(SUB)}</text>',
@@ -163,7 +180,7 @@ def hero() -> str:
 
     body = "\n".join(parts)
     used = "".join([NAME, ROLE, SUB, "".join(k + v for k, v in FETCH), "".join(b[0] for b in BLIPS),
-                    "❯whoami neofetch --profile: rakshit@rakshit-737: ~ — zsh SWEEP // PUBLIC REPOS"])
+                    "❯whoami neofetch --profile: rakshit@rakshit-737: ~ — zsh SWEEP // PUBLIC REPOS", NOISE])
     return svg_doc(W, H, body, "", "Rakshit Rameshbabu — Software & Security Engineer", used)
 
 
@@ -217,6 +234,7 @@ def toolchain() -> str:
     s, t = typed(32 + 2 * 14.5 * CHAR_W, 70, "ls -1 /opt/toolchain/*", 14.5, 0.3, "tct", fill=C["soft"])
     parts.append(s)
     y = 110
+    rnd = random.Random(1337)
     for i, (cat, tools) in enumerate(TOOLCHAIN):
         row = [f'<text x="32" y="{y}" font-size="{fs}" font-weight="700" fill="{C["cyan"]}">{esc(cat)}</text>']
         x = 32 + 16 * fs * CHAR_W
@@ -224,9 +242,15 @@ def toolchain() -> str:
             w = len(tool) * fs * CHAR_W + 18
             if x + w > W - 28:
                 break
+            # each chip lights up briefly at a random moment of a 14 s cycle,
+            # like processes waking on a busy box
+            b = rnd.uniform(2.5, 16.5)
+            flash = f'keyTimes="0;0.03;0.10;1" dur="14s" begin="{b:.2f}s" repeatCount="indefinite"'
             row.append(
                 f'<rect x="{x:.1f}" y="{y-16}" width="{w:.1f}" height="23" rx="5" fill="{C["green"]}" '
-                f'fill-opacity="0.06" stroke="{C["green"]}" stroke-opacity="0.35"/>'
+                f'fill-opacity="0.06" stroke="{C["green"]}" stroke-opacity="0.35">'
+                f'<animate attributeName="stroke-opacity" values="0.35;1;0.35;0.35" {flash}/>'
+                f'<animate attributeName="fill-opacity" values="0.06;0.2;0.06;0.06" {flash}/></rect>'
                 f'<text x="{x+9:.1f}" y="{y}" font-size="{fs}" fill="{C["soft"]}">{esc(tool)}</text>')
             x += w + 8
         parts.append(appear("".join(row), t + 0.1 + i * 0.12))
@@ -240,7 +264,7 @@ DOMAINS = {
     "DFIR": C["cyan"],
     "intel": C["purple"],
     "malware": C["magenta"],
-    "network": "#ff7b72",
+    "network": C["coral"],
     "infra & supply chain": C["amber"],
 }
 ENGINES = [  # (name, domain, flow): flow "in" writes claims to the graph, "out" consumes it
@@ -318,11 +342,213 @@ def constellation() -> str:
     return svg_doc(W, H, "\n".join(parts), "", "THROUGHLINE: 13 security engines writing cited claims into one evidence graph", used)
 
 
+# ---------------------------------------------------------------- tagline banner
+# Replaces the third-party readme-typing-svg: same five lines, typed and deleted
+# in a loop, served from this repo.
+TAGLINES = [
+    "detection-as-code, measured on real telemetry",
+    "provenance graphs → root cause → blast radius",
+    "static analysis that never runs the sample",
+    "attribution that can say: I don't know",
+    "every number regenerates from one command",
+]
+
+
+def _kt(pts: list[tuple[float, float]], T: float) -> tuple[str, str]:
+    """(values, keyTimes) for a discrete animation from (time, value) points."""
+    out, last = [], -1.0
+    for t, v in pts:
+        k = round(t / T, 5)
+        if k <= last:
+            k = round(last + 0.00001, 5)
+        out.append((k, v))
+        last = k
+    if out[-1][0] < 1:
+        out.append((1.0, out[-1][1]))
+    return ";".join(f"{v:.2f}" for _, v in out), ";".join(f"{k:g}" for k, _ in out)
+
+
+def taglines() -> str:
+    W, H, fs = 1000, 60, 17
+    cw = fs * CHAR_W
+    x0, y = 28, 37
+    tx = x0 + 2 * cw
+    cps_t, cps_d, hold, gap = 30.0, 75.0, 2.1, 0.45
+    slots, t = [], 0.35
+    for line in TAGLINES:
+        n = len(line)
+        a, b = t, t + n / cps_t
+        c = b + hold
+        d = c + n / cps_d
+        slots.append((a, b, c, d))
+        t = d + gap
+    T = t
+    parts = [
+        f'<defs><radialGradient id="tg-glow" cx="0%" cy="50%" r="60%">'
+        f'<stop offset="0" stop-color="{C["green"]}" stop-opacity="0.12"/><stop offset="1" stop-color="{C["green"]}" stop-opacity="0"/>'
+        f'</radialGradient><pattern id="tg-scan" width="4" height="4" patternUnits="userSpaceOnUse">'
+        f'<rect width="4" height="1" fill="#ffffff" opacity="0.025"/></pattern></defs>',
+        f'<rect x="0.5" y="0.5" width="{W-1}" height="{H-1}" rx="10" fill="{C["bg"]}"/>',
+        f'<rect x="0.5" y="0.5" width="{W-1}" height="{H-1}" rx="10" fill="url(#tg-glow)"/>',
+        f'<rect x="0.5" y="0.5" width="{W-1}" height="{H-1}" rx="10" fill="url(#tg-scan)"/>',
+        f'<rect x="0.5" y="0.5" width="{W-1}" height="{H-1}" rx="10" fill="none" stroke="{C["border"]}"/>',
+        f'<text x="{x0}" y="{y}" font-size="{fs}" font-weight="700" fill="{C["green"]}">❯</text>',
+    ]
+    cur = [(0.0, 0.0)]
+    prog = []
+    for i, (line, (a, b, c, d)) in enumerate(zip(TAGLINES, slots)):
+        n = len(line)
+        pts = [(0.0, 0.0)]
+        pts += [(a + (k - 1) / cps_t, k * cw) for k in range(1, n + 1)]
+        pts += [(c + (n - k) / cps_d, k * cw) for k in range(n - 1, -1, -1)]
+        cur += pts[1:]
+        vals, kts = _kt(pts, T)
+        base = n * cw if i == 0 else 0
+        parts.append(
+            f'<clipPath id="tg{i}"><rect x="{tx:.2f}" y="{y - fs}" width="{base:.2f}" height="{fs * 1.6}">'
+            f'<animate attributeName="width" values="{vals}" keyTimes="{kts}" calcMode="discrete" dur="{T:.3f}s" repeatCount="indefinite"/>'
+            f'</rect></clipPath>'
+            f'<text x="{tx:.2f}" y="{y}" font-size="{fs}" fill="{C["text"]}" clip-path="url(#tg{i})" xml:space="preserve">{esc(line)}</text>')
+        # counter on the right: [i/5]
+        k1, k2 = a / T, min((slots[i + 1][0] if i + 1 < len(slots) else T) / T, 1)
+        parts.append(
+            f'<text x="{W - 28}" y="{y - 1}" font-size="12.5" text-anchor="end" fill="{C["dim"]}" opacity="{1 if i == 0 else 0}">'
+            f'taglines <tspan fill="{C["green"]}">{i + 1}</tspan>/{len(TAGLINES)}'
+            f'<animate attributeName="opacity" values="0;1;0;0" keyTimes="0;{k1:.5f};{k2:.5f};1" calcMode="discrete" dur="{T:.3f}s" repeatCount="indefinite"/></text>')
+        prog.append((a, d))
+    cvals, ckts = _kt([(t0, tx + w) for t0, w in cur], T)
+    parts.append(
+        f'<rect x="{tx + len(TAGLINES[0]) * cw:.2f}" y="{y - fs * 0.82:.2f}" width="{cw * 0.55:.2f}" height="{fs * 1.02:.2f}" fill="{C["green"]}">'
+        f'<animate attributeName="x" values="{cvals}" keyTimes="{ckts}" calcMode="discrete" dur="{T:.3f}s" repeatCount="indefinite"/>'
+        f'<animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.5;0.5;1" dur="1.05s" repeatCount="indefinite"/></rect>')
+    # thin progress line along the bottom edge, one sweep per tagline
+    pv, pk = [], []
+    for (a, d) in prog:
+        pv += ["0", "0", f"{W - 40}", "0"]
+        pk += [a / T, a / T + 0.00001, d / T, d / T + 0.00001]
+    pk = [0.0] + pk + [1.0]
+    pv = ["0"] + pv + ["0"]
+    kt = ";".join(f"{k:.5f}" for k in pk)
+    parts.append(
+        f'<rect x="20" y="{H - 3}" width="{W - 40}" height="1.5" rx="0.75" fill="{C["green"]}" opacity="0.35">'
+        f'<animate attributeName="width" values="{";".join(pv)}" keyTimes="{kt}" dur="{T:.3f}s" repeatCount="indefinite"/></rect>')
+    used = "".join(TAGLINES) + "❯ taglines 0123456789/"
+    return svg_doc(W, H, "\n".join(parts), "", " · ".join(TAGLINES), used)
+
+
+# ------------------------------------------------------------------ link buttons
+LINKS = [  # (file stem, label, accessible title)
+    ("portfolio", "PORTFOLIO", "Portfolio: rakshit-737.is-a.dev"),
+    ("linkedin", "LINKEDIN", "LinkedIn: rakshit-rameshbabu"),
+    ("email", "EMAIL", "Email: rakshitoffl@gmail.com"),
+    ("resume", "RESUME", "Resume (PDF)"),
+    ("cylab", "CYLAB", "CyLab Academy profile"),
+]
+
+
+def button(label: str, title: str, i: int) -> str:
+    fs, h, pad = 12.5, 34, 14
+    cw = fs * CHAR_W
+    w = round(pad + cw + 9 + len(label) * cw + 10 + cw + pad)
+    uid = f"b{i}"
+    y = h / 2 + fs * 0.36
+    x_label = pad + cw + 9
+    body = (
+        f'<defs><radialGradient id="{uid}-glow" cx="0%" cy="50%" r="75%">'
+        f'<stop offset="0" stop-color="{C["green"]}" stop-opacity="0.16"/><stop offset="1" stop-color="{C["green"]}" stop-opacity="0"/>'
+        f'</radialGradient></defs>'
+        f'<rect x="0.5" y="0.5" width="{w-1}" height="{h-1}" rx="8" fill="{C["bg"]}"/>'
+        f'<rect x="0.5" y="0.5" width="{w-1}" height="{h-1}" rx="8" fill="url(#{uid}-glow)"/>'
+        + sheen(w, h, uid, 8, begin=1.0 + i * 0.22, every=6.5)
+        + f'<rect x="0.5" y="0.5" width="{w-1}" height="{h-1}" rx="8" fill="none" stroke="{C["border"]}"/>'
+        f'<text x="{pad}" y="{y:.1f}" font-size="{fs}" font-weight="700" fill="{C["green"]}">❯</text>'
+        f'<text x="{x_label:.1f}" y="{y:.1f}" font-size="{fs}" font-weight="700" fill="{C["text"]}" letter-spacing="0">{esc(label)}</text>'
+        f'<text x="{w - pad - cw:.1f}" y="{y:.1f}" font-size="{fs}" font-weight="700" fill="{C["dim"]}">↗</text>'
+    )
+    return svg_doc(w, h, body, "", title, label + "❯↗")
+
+
+# --------------------------------------------------------------- trophies log
+TROPHIES = [  # (diff marker, date, tag, event, colour)
+    ("+", "2025-06-21", "FIRST PRIZE", "Cyber Secure 360 Expo 2025 · SCOPE, VIT Chennai", "amber"),
+    ("+", "2026-06", "TOP 100", "FarAway Zuup Hackathon · of ~11,000 participants", "green"),
+    ("+", "2026-08", "FINALS", "FeelsLike (Team Goldilocks) · digital-twin building optimizer", "magenta"),
+    ("+", "2026-09-17", "RELEASE", "Warden v2.0.0 · supply-chain security platform", "cyan"),
+    ("+", "2026-09-20", "RELEASE", "Fillwright v0.6.1 · privacy-first autofill extension", "cyan"),
+    ("+", "2026-09-26", "RELEASE", "Nikasha v0.1.0 · PyPI, GHCR, GitHub Releases", "cyan"),
+    ("!", "ongoing", "CGPA 9.07", "B.Tech CSE (Cyber Security), VIT Chennai · class of 2028", "purple"),
+]
+
+
+def trophies() -> str:
+    W, fs, row = 1000, 13.5, 40
+    cw = fs * CHAR_W
+    top = 112
+    H = top + (len(TROPHIES) - 1) * row + 44
+    parts = [window(W, H, "~/trophies.log — tail -f", "tr")]
+    parts.append(f'<text x="32" y="70" font-size="14.5" fill="{C["green"]}" font-weight="700">❯</text>')
+    s, t = typed(32 + 2 * 14.5 * CHAR_W, 70, f"tail -n {len(TROPHIES)} trophies.log", 14.5, 0.3, "trt", fill=C["soft"])
+    parts.append(s)
+    t += 0.15
+    rail_x = 58
+    y_first, y_last = top - 4.5, top + (len(TROPHIES) - 1) * row - 4.5
+    per = 0.28
+    draw = per * (len(TROPHIES) - 1)
+    # the rail draws itself downward, reaching each node as its row appears
+    parts.append(
+        f'<line x1="{rail_x}" y1="{y_first}" x2="{rail_x}" y2="{y_last}" stroke="{C["faint"]}" stroke-width="2"/>'
+        f'<line x1="{rail_x}" y1="{y_first}" x2="{rail_x}" y2="{y_last}" stroke="{C["green"]}" stroke-width="2" '
+        f'stroke-opacity="0.7" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="0">'
+        f'<animate attributeName="stroke-dashoffset" values="1;1;0" keyTimes="0;{t / (t + draw):.4f};1" dur="{t + draw:.3f}s" fill="freeze"/></line>')
+    date_w = max(len(r[1]) for r in TROPHIES) * cw
+    chip_fs = 11.5
+    chip_w = max(len(r[2]) for r in TROPHIES) * chip_fs * CHAR_W + 18
+    x_date = rail_x + 22
+    x_chip = x_date + date_w + 18
+    x_event = x_chip + chip_w + 14
+    for i, (mark, date, tag, event, key) in enumerate(TROPHIES):
+        col = C[key]
+        y = top + i * row
+        b = t + i * per
+        last = i == len(TROPHIES) - 1
+        mcol = C["green"] if mark == "+" else C["amber"]
+        rep = 'repeatCount="indefinite"' if last else 'fill="freeze"'
+        pd = 1.6 if last else 0.9
+        pulse = (
+            f'<circle cx="{rail_x}" cy="{y - 4.5}" r="6" fill="none" stroke="{col}">'
+            f'<animate attributeName="r" values="6;16" dur="{pd}s" begin="{b:.2f}s" {rep}/>'
+            f'<animate attributeName="stroke-opacity" values="0.9;0" dur="{pd}s" begin="{b:.2f}s" {rep}/></circle>')
+        tw = len(tag) * chip_fs * CHAR_W + 18
+        row_svg = (
+            f'<text x="26" y="{y}" font-size="{fs}" font-weight="700" fill="{mcol}">{esc(mark)}</text>'
+            f'<circle cx="{rail_x}" cy="{y - 4.5}" r="7" fill="{C["bg"]}" stroke="{col}" stroke-width="1.5"/>'
+            f'<circle cx="{rail_x}" cy="{y - 4.5}" r="3.2" fill="{col}"/>'
+            f'<text x="{x_date:.1f}" y="{y}" font-size="{fs}" fill="{C["dim"]}">{esc(date)}</text>'
+            f'<rect x="{x_chip:.1f}" y="{y - 15}" width="{tw:.1f}" height="21" rx="10.5" fill="{col}" fill-opacity="0.12" stroke="{col}" stroke-opacity="0.6"/>'
+            f'<text x="{x_chip + tw / 2:.1f}" y="{y - 0.5}" font-size="{chip_fs}" font-weight="700" text-anchor="middle" fill="{col}">{esc(tag)}</text>'
+            f'<text x="{x_event:.1f}" y="{y}" font-size="{fs}" fill="{C["soft"]}">{esc(event)}</text>'
+        )
+        slide = (f'<g>{row_svg}<animateTransform attributeName="transform" type="translate" values="-10 0;-10 0;0 0" '
+                 f'keyTimes="0;{b / (b + 0.3):.4f};1" dur="{b + 0.3:.3f}s" fill="freeze"/>{reveal(b, 0.3)}</g>')
+        parts.append(slide + appear(pulse, b, 0.05))
+        if last:
+            parts.append(cursor(x_event + (len(event) + 1) * cw, y, fs, b + 0.4, C["dim"]))
+    used = "".join("".join(r[:4]) for r in TROPHIES) + "❯tail -n 0123456789 trophies.log ~/trophies.log — tail -f+!"
+    return svg_doc(W, H, "\n".join(parts), "", "trophies.log: " + " · ".join(f"{r[1]} {r[2]} {r[3]}" for r in TROPHIES), used)
+
+
 if __name__ == "__main__":
     OUT.mkdir(exist_ok=True)
     (OUT / "hero.svg").write_text(hero(), encoding="utf-8")
     (OUT / "footer.svg").write_text(footer(), encoding="utf-8")
     (OUT / "toolchain.svg").write_text(toolchain(), encoding="utf-8")
     (OUT / "constellation.svg").write_text(constellation(), encoding="utf-8")
-    for f in ("hero.svg", "footer.svg", "toolchain.svg", "constellation.svg"):
+    (OUT / "taglines.svg").write_text(taglines(), encoding="utf-8")
+    (OUT / "trophies.svg").write_text(trophies(), encoding="utf-8")
+    written = ["hero.svg", "footer.svg", "toolchain.svg", "constellation.svg", "taglines.svg", "trophies.svg"]
+    (OUT / "buttons").mkdir(exist_ok=True)
+    for i, (stem, label, title) in enumerate(LINKS):
+        (OUT / "buttons" / f"{stem}.svg").write_text(button(label, title, i), encoding="utf-8")
+        written.append(f"buttons/{stem}.svg")
+    for f in written:
         print(f, (OUT / f).stat().st_size, "bytes")
