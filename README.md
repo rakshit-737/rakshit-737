@@ -14,7 +14,7 @@
 
 ## <samp>❯ cat about.md</samp>
 
-I'm a B.Tech CSE (Cyber Security) student at **VIT Chennai** (CGPA 9.07, class of 2028). I build **defensive security tooling** and **full-stack products**, and I take them end to end: written requirements, architecture, CI, then a release.
+I'm a B.Tech CSE (Cyber Security) student at **VIT Chennai** (class of 2028). I build **defensive security tooling** and **full-stack products**, and I take them end to end: written requirements, architecture, CI, then a release.
 
 Every repo is held to one rule: **every number regenerates from one command.** That means public datasets, committed results, baselines run on identical inputs, and a *Limitations* section that says what does not work. The security tools are defensive and lab-safe: static where possible, sandboxed where not.
 
