@@ -12,6 +12,15 @@
   <a href="https://learn.cylabacademy.org/users/rrakshit"><img src="assets/buttons/cylab.svg" height="34" alt="CyLab Academy" /></a>
 </p>
 
+<p align="center">
+  <sub><strong>Quick links:</strong> <a href="https://rakshit-737.is-a.dev">Portfolio</a> · <a href="https://rakshit-737.is-a.dev/rakshit-rameshbabu-resume.pdf">Resume</a> · <a href="https://www.linkedin.com/in/rakshit-rameshbabu/">LinkedIn</a> · <a href="mailto:rakshitoffl@gmail.com">Email</a> · <a href="https://github.com/rakshit-737?tab=repositories">All repositories</a> · <a href="https://github.com/rakshit-737?tab=stars">Starred work</a></sub>
+</p>
+
+<p align="center">
+  <sub><strong>Jump to:</strong> <a href="#about">About</a> · <a href="#featured-projects">Featured projects</a> · <a href="#security-arsenal">Security arsenal</a> · <a href="#other-projects">Also built</a> · <a href="#tooling">Tooling</a> · <a href="#telemetry">Telemetry</a></sub>
+</p>
+
+<a id="about"></a>
 ## <samp>❯ cat about.md</samp>
 
 I'm a B.Tech CSE (Cyber Security) student at **VIT Chennai** (class of 2028). I build **defensive security tooling** and **full-stack products**, and I take them end to end: written requirements, architecture, CI, then a release.
@@ -29,6 +38,7 @@ interests: [detection engineering, DFIR, supply-chain security, AI-agent securit
 open_to: internships & full-time roles in software / security engineering
 ```
 
+<a id="featured-projects"></a>
 ## <samp>❯ ls ~/featured</samp>
 
 > [!NOTE]
@@ -47,6 +57,7 @@ open_to: internships & full-time roles in software / security engineering
   <a href="https://github.com/rakshit-737/feelslike"><img src="generated/card-feelslike.svg" width="49%" alt="FEELSLIKE: digital-twin HVAC optimizer" /></a>
 </p>
 
+<a id="security-arsenal"></a>
 ## <samp>❯ throughline --map</samp>
 
 Thirteen single-purpose security engines, each benchmarked on its own, plugged into one graph. [THROUGHLINE](https://github.com/rakshit-737/throughline) fuses them, so *what happened, how did it start, who did it, and how sure are we?* becomes one query.
@@ -80,6 +91,7 @@ Thirteen single-purpose security engines, each benchmarked on its own, plugged i
 
 </details>
 
+<a id="other-projects"></a>
 ## <samp>❯ ls ~/also-built</samp>
 
 - **[PlantPal+](https://github.com/rakshit-737/PlantPal-Plus)**: plant care, fitness and nutrition on one habit loop. TypeScript monorepo (Expo, React + Vite, Express, PostgreSQL) with an IEEE-830 requirements package: 228 FRs, 119 user stories, 89 use cases.
@@ -87,6 +99,7 @@ Thirteen single-purpose security engines, each benchmarked on its own, plugged i
 - **[portfolio](https://github.com/rakshit-737/portfolio)**: a candlelit, scroll-driven Next.js site. CI gates Lighthouse, axe, CSP and link checks; accessibility, best-practices and SEO score 100.
 - **[VIT CGPA Calculator](https://github.com/rakshit-737/cgpa-calculator)** · **[learn-sql](https://github.com/rakshit-737/learn-sql)** · **[PaceReader](https://github.com/rakshit-737/pace-reader)** · **[ZT Web Security Simulator](https://github.com/rakshit-737/web-security-simulator)**: small tools for studying and campus life.
 
+<a id="tooling"></a>
 ## <samp>❯ which --all</samp>
 
 <p align="center">
@@ -101,6 +114,7 @@ Thirteen single-purpose security engines, each benchmarked on its own, plugged i
 
 <img src="assets/trophies.svg" width="100%" alt="trophies.log: 2025-06-21 FIRST PRIZE, Cyber Secure 360 Expo 2025, SCOPE, VIT Chennai · 2026-06 TOP 100, FarAway Zuup Hackathon, of ~11,000 participants · 2026-08 FINALS, FeelsLike (Team Goldilocks), digital-twin building optimizer · 2026-09-17 RELEASE, Warden v2.0.0, supply-chain security platform · 2026-09-20 RELEASE, Fillwright v0.6.1, privacy-first autofill extension · 2026-09-26 RELEASE, Nikasha v0.1.0 on PyPI, GHCR and GitHub Releases · ongoing: CGPA 9.07, B.Tech CSE (Cyber Security), VIT Chennai, class of 2028" />
 
+<a id="telemetry"></a>
 ## <samp>❯ gh telemetry</samp>
 
 <p align="center">
